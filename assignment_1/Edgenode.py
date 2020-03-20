@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 class Edgenode:
-    def __init__(self,current_number, wg=None):
+    def __init__(self,current_number, wg=None,mother=None):
+        self.parent_node = mother
         self.content = current_number
         self.edge_weight = wg
         self.next_node = None
@@ -74,9 +75,20 @@ class Edgenode:
     def print_next_node(self):
         print(self.next_node.content)
     
+    def set_parent(self, obj):
+        self.parent_node = obj
+
+    def get_next_node(self):
+        return self.next_node
+    def get_parent(self):
+        return self.parent_node
+    
     
 
 
 foo = Edgenode("001")
 foo.generate_next_node("sub",2)
-foo.print_next_node()
+foo.set_parent(foo)
+print(foo.get_parent())
+
+# After you generate next node, remember to set the parent node!! 
