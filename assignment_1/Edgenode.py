@@ -75,20 +75,21 @@ class Edgenode:
     def print_next_node(self):
         print(self.next_node.content)
     
-    def set_parent(self, obj):
-        self.parent_node = obj
+    def set_parent_of_child(self, obj):
+        self.next_node.parent_node = obj
 
     def get_next_node(self):
         return self.next_node
-    def get_parent(self):
-        return self.parent_node
+    def get_parent_of_child(self):
+        return self.next_node.parent_node.content
     
     
 
 
 foo = Edgenode("001")
 foo.generate_next_node("sub",2)
-foo.set_parent(foo)
-print(foo.get_parent())
+foo.set_parent_of_child(foo)
+foo.print_current_node()
+print(foo.get_next_node())
 
-# After you generate next node, remember to set the parent node!! 
+# After you generate next node, remember to set the parent node, then chuck child into fringe!! 
