@@ -86,10 +86,10 @@ class Edgenode:
     
 
 
-foo = Edgenode("001")
-foo.generate_next_node("sub",2)
-foo.set_parent_of_child(foo)
-foo.print_current_node()
-print(foo.get_next_node())
+# foo = Edgenode("001")
+# foo.generate_next_node("sub",2)
+# foo.set_parent_of_child(foo)
+# foo.print_current_node()
+# print(foo.get_next_node())
 
 # After you generate next node, remember to set the parent node, then chuck child into fringe!! 
