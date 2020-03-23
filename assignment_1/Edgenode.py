@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 class Edgenode:
-    def __init__(self,current_number, wg=None,mother=None):
+    def __init__(self,current_number, flag= None, wg=None,mother=None):
         self.parent_node = mother
         self.content = current_number
+        self.digit_space = flag
         self.edge_weight = wg
         self.next_node = None
 
@@ -68,7 +69,7 @@ class Edgenode:
                 print("error. get me out of here")
                 return None
             
-            self.next_node = Edgenode(my_string, weight)
+            self.next_node = Edgenode(my_string, digit, weight)
             return True
         # pass
 
@@ -91,6 +92,9 @@ class Edgenode:
         return self.next_node
     def get_parent_of_child_content(self):
         return self.next_node.parent_node.content
+    
+    def get_digit_space(self):
+        return self.digit_space
     
     
 

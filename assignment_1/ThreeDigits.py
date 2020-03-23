@@ -31,31 +31,28 @@ def bfs():
         print("Solution FOUND!!! ")
         return
     
-    if opr == "sub" and flag == 0:
-        produce_child(current_node,opr,flag)
+    if opr == "sub" and current_node.get_digit_space() != 0:
+        produce_child(current_node,opr,0)
         opr = "add"
     
-    if opr == "add" and flag == 0:
-        produce_child(current_node,opr,flag)
+    if opr == "add" and current_node.get_digit_space() != 0:
+        produce_child(current_node,opr,0)
         opr = "sub"
-        flag += 1
 
-    if opr == "sub" and flag == 1:
-        produce_child(current_node,opr,flag)
+    if opr == "sub" and current_node.get_digit_space() != 1:
+        produce_child(current_node,opr,1)
         opr = "add"
 
-    if opr == "add" and flag == 1:
-        produce_child(current_node,opr,flag)
+    if opr == "add" and current_node.get_digit_space() != 1:
+        produce_child(current_node,opr,1)
         opr = "sub"
-        flag += 1
  
-    if opr == "sub" and flag == 2:
-        produce_child(current_node,opr,flag)
+    if opr == "sub" and current_node.get_digit_space() != 2:
+        produce_child(current_node,opr,2)
         opr = "add"
 
-    if opr == "add" and flag == 2:
-        produce_child(current_node,opr,flag)
-        flag = 0
+    if opr == "add" and current_node.get_digit_space() != 2:
+        produce_child(current_node,opr,2)
         opr = "sub"
     
     expanded.put(current_node)
