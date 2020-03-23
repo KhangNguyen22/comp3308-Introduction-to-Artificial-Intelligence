@@ -16,47 +16,49 @@ opr = "sub"
 def bfs():
     global opr
     # global flag
-    current_node = fringe.get()
-    # print("expanded size: " + str(expanded.qsize()))
+    while not fringe.empty():
+        current_node = fringe.get()
+        # if cycle(current_node):
+        #     continue
+        # print("expanded size: " + str(expanded.qsize()))
 
-    if expanded.qsize() == limit:
-        print("No Solution Found")
-        sys.exit(0)
-    # current_node.print_current_node()
-    # Check if goal node
-    if current_node.get_current_node_content() == goal:
-        solution.put(current_node)
+        if expanded.qsize() == limit:
+            print("No Solution Found")
+            sys.exit(0)
+        # current_node.print_current_node()
+        # Check if goal node
+        if current_node.get_current_node_content() == goal:
+            solution.put(current_node)
+            expanded.put(current_node)
+            traverse_back(current_node)
+            # print("Solution FOUND!!! ")
+            return
+        
+        if opr == "sub" and current_node.get_digit_space() != 0:
+            produce_child(current_node,opr,0)
+            opr = "add"
+        
+        if opr == "add" and current_node.get_digit_space() != 0:
+            produce_child(current_node,opr,0)
+            opr = "sub"
+
+        if opr == "sub" and current_node.get_digit_space() != 1:
+            produce_child(current_node,opr,1)
+            opr = "add"
+
+        if opr == "add" and current_node.get_digit_space() != 1:
+            produce_child(current_node,opr,1)
+            opr = "sub"
+    
+        if opr == "sub" and current_node.get_digit_space() != 2:
+            produce_child(current_node,opr,2)
+            opr = "add"
+
+        if opr == "add" and current_node.get_digit_space() != 2:
+            produce_child(current_node,opr,2)
+            opr = "sub"
+        
         expanded.put(current_node)
-        traverse_back(current_node)
-        # print("Solution FOUND!!! ")
-        return
-    
-    if opr == "sub" and current_node.get_digit_space() != 0:
-        produce_child(current_node,opr,0)
-        opr = "add"
-    
-    if opr == "add" and current_node.get_digit_space() != 0:
-        produce_child(current_node,opr,0)
-        opr = "sub"
-
-    if opr == "sub" and current_node.get_digit_space() != 1:
-        produce_child(current_node,opr,1)
-        opr = "add"
-
-    if opr == "add" and current_node.get_digit_space() != 1:
-        produce_child(current_node,opr,1)
-        opr = "sub"
- 
-    if opr == "sub" and current_node.get_digit_space() != 2:
-        produce_child(current_node,opr,2)
-        opr = "add"
-
-    if opr == "add" and current_node.get_digit_space() != 2:
-        produce_child(current_node,opr,2)
-        opr = "sub"
-    
-    expanded.put(current_node)
-    bfs()
 
 
 def dfs():
@@ -73,6 +75,11 @@ def a_star():
 
 def hill_climbing():
     print("Hill climbing works")
+
+# def cycle(node):
+    
+
+    return False
 
 def produce_child(current_node, current_opr,current_flag):
     if current_node.generate_next_node(current_opr,current_flag):
@@ -100,7 +107,7 @@ def check_forbidden(node):
                 return True
     return False
 
-file = open("sample.txt",'r')
+file = open(sys.argv[2],'r')
 Lines = file.readlines()
 clean = []
 
@@ -145,5 +152,5 @@ def print_out(type_queue):
             printable_solution += ","+ type_queue.get().get_current_node_content()
     print(printable_solution)
 print_out(solution)
-# print(expanded.qsize())
+print(expanded.qsize())
 print_out(expanded)
