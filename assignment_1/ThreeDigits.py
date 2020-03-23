@@ -8,7 +8,7 @@ fringe = queue.Queue()
 goal = None
 # priority_fringe = 
 forbidden = None
-expanded = queue.Queue()
+expanded = []
 solution = queue.LifoQueue()
 opr = "sub"
 # flag = 0
@@ -18,18 +18,18 @@ def bfs():
     # global flag
     while not fringe.empty():
         current_node = fringe.get()
-        # if cycle(current_node):
-        #     continue
+        if cycle(current_node):
+            continue
         # print("expanded size: " + str(expanded.qsize()))
 
-        if expanded.qsize() == limit:
+        if len(expanded) == limit:
             print("No Solution Found")
             sys.exit(0)
         # current_node.print_current_node()
         # Check if goal node
         if current_node.get_current_node_content() == goal:
             solution.put(current_node)
-            expanded.put(current_node)
+            expanded.append(current_node)
             traverse_back(current_node)
             # print("Solution FOUND!!! ")
             return
@@ -58,7 +58,7 @@ def bfs():
             produce_child(current_node,opr,2)
             opr = "sub"
         
-        expanded.put(current_node)
+        expanded.append(current_node)
 
 
 def dfs():
@@ -76,9 +76,10 @@ def a_star():
 def hill_climbing():
     print("Hill climbing works")
 
-# def cycle(node):
-    
-
+def cycle(node):
+    for item in expanded:
+        if item.get_current_node_content() == node.get_current_node_content() and item.get_digit_space() == node.get_digit_space() :
+            return True
     return False
 
 def produce_child(current_node, current_opr,current_flag):
@@ -152,5 +153,20 @@ def print_out(type_queue):
             printable_solution += ","+ type_queue.get().get_current_node_content()
     print(printable_solution)
 print_out(solution)
-print(expanded.qsize())
-print_out(expanded)
+
+# print(len(expanded))
+
+expanded_string = ""
+if len(expanded) == 1:
+    print(expanded[0].get_current_node_content())
+else:
+    count = 0
+    for item in expanded:
+        if count == 0:
+            expanded_string += item.get_current_node_content()
+            count += 1
+        else:
+            expanded_string += "," + item.get_current_node_content()
+    print(expanded_string)
+
+
