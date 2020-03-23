@@ -66,9 +66,10 @@ class Edgenode:
             my_string = self.edit_number(self.content, operator,digit)
             if len(my_string) != 3:
                 print("error. get me out of here")
-                return
+                return None
             
             self.next_node = Edgenode(my_string, weight)
+            return True
         # pass
 
     def print_current_node(self):
@@ -82,6 +83,9 @@ class Edgenode:
 
     def get_current_node_content(self):
         return self.content
+
+    def get_parent(self):
+        return self.parent_node
 
     def get_next_node(self):
         return self.next_node
