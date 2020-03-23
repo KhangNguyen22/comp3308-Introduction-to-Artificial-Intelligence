@@ -65,6 +65,10 @@ def dfs(cur_node):
     if cycle(cur_node):
         return "elephant"
     
+    if len(expanded) == limit:
+        print("No Solution Found")
+        sys.exit(0)
+    
     if cur_node.get_current_node_content() == goal:
         solution.put(cur_node)
         expanded.append(cur_node)
@@ -76,7 +80,8 @@ def dfs(cur_node):
 
     if opr == "sub" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, opr,0, False)
-        dfs(child)
+        if child:
+            dfs(child)
         opr = "add"
             
     if solution.qsize() > 0:
@@ -84,36 +89,46 @@ def dfs(cur_node):
     
     if opr == "add" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, opr,0, False)
-        dfs(child)
-        # opr = "sub"
+        if child:
+            dfs(child)
+        opr = "sub"
 
     if solution.qsize() > 0:
         return
 
     if opr == "sub" and cur_node.get_digit_space() != 1:
         child = produce_child(cur_node, opr,1, False)
-        dfs(child)
-        # opr = "add"
+        # print("1")
+        # print(child)
+        if child:
+            dfs(child)
+        opr = "add"
     
     if solution.qsize() > 0:
         return
     
     if opr == "add" and cur_node.get_digit_space() != 1:
         child = produce_child(cur_node, opr,1, False)
-        # dfs(child)
+        if child:
+            dfs(child)
+        opr = "sub"
 
     if solution.qsize() > 0:
         return 
 
     if opr == "sub" and cur_node.get_digit_space() != 2:
         child = produce_child(cur_node, opr,2, False)
-        # dfs(child
+        if child:
+            dfs(child)
+        opr = "add"
     
     if solution.qsize() > 0:
         return
     
     if opr == "add" and cur_node.get_digit_space() != 2:
         child = produce_child(cur_node, opr,2, False)
+        if child:
+            dfs(child)
 
     if solution.qsize() > 0:
         return
@@ -131,6 +146,7 @@ def hill_climbing():
     print("Hill climbing works")
 
 def cycle(node):
+    # print(node.get_current_node_content)
     for item in expanded:
         if item.get_current_node_content() == node.get_current_node_content() and item.get_digit_space() == node.get_digit_space() :
             return True
