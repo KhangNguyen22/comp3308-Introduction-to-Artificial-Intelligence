@@ -61,8 +61,9 @@ def bfs():
 
 
 def dfs(cur_node):
-    global opr
+    cur_opr = "sub"
     if cycle(cur_node):
+        # print("elephant")
         return "elephant"
     
     if len(expanded) == limit:
@@ -78,55 +79,56 @@ def dfs(cur_node):
     
     expanded.append(cur_node)
 
-    if opr == "sub" and cur_node.get_digit_space() != 0:
-        child = produce_child(cur_node, opr,0, False)
+    if cur_opr == "sub" and cur_node.get_digit_space() != 0:
+        child = produce_child(cur_node, cur_opr,0, False)
         if child:
             dfs(child)
-        opr = "add"
+        cur_opr = "add"
             
     if solution.qsize() > 0:
         return
     
-    if opr == "add" and cur_node.get_digit_space() != 0:
-        child = produce_child(cur_node, opr,0, False)
+    if cur_opr == "add" and cur_node.get_digit_space() != 0:
+        child = produce_child(cur_node, cur_opr,0, False)
         if child:
             dfs(child)
-        opr = "sub"
+        cur_opr = "sub"
 
     if solution.qsize() > 0:
         return
 
-    if opr == "sub" and cur_node.get_digit_space() != 1:
-        child = produce_child(cur_node, opr,1, False)
+    if cur_opr == "sub" and cur_node.get_digit_space() != 1:
+        child = produce_child(cur_node, cur_opr,1, False)
         # print("1")
         # print(child)
         if child:
             dfs(child)
-        opr = "add"
+        cur_opr = "add"
     
     if solution.qsize() > 0:
         return
     
-    if opr == "add" and cur_node.get_digit_space() != 1:
-        child = produce_child(cur_node, opr,1, False)
+    if cur_opr == "add" and cur_node.get_digit_space() != 1:
+        child = produce_child(cur_node, cur_opr,1, False)
+        # print(child.get_current_node_content())
         if child:
             dfs(child)
-        opr = "sub"
+        cur_opr = "sub"
 
     if solution.qsize() > 0:
         return 
 
-    if opr == "sub" and cur_node.get_digit_space() != 2:
-        child = produce_child(cur_node, opr,2, False)
+    if cur_opr == "sub" and cur_node.get_digit_space() != 2:
+        child = produce_child(cur_node, cur_opr,2, False)
         if child:
             dfs(child)
-        opr = "add"
+        cur_opr = "add"
     
     if solution.qsize() > 0:
         return
     
-    if opr == "add" and cur_node.get_digit_space() != 2:
-        child = produce_child(cur_node, opr,2, False)
+    if cur_opr == "add" and cur_node.get_digit_space() != 2:
+        child = produce_child(cur_node, cur_opr,2, False)
         if child:
             dfs(child)
 
