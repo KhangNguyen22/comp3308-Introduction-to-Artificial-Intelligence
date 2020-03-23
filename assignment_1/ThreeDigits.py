@@ -2,7 +2,7 @@ import sys
 import edgenode
 import queue
 
-limit = 995
+limit = 1000
 
 fringe = queue.Queue()
 goal = None
@@ -11,24 +11,24 @@ forbidden = None
 expanded = queue.Queue()
 solution = queue.LifoQueue()
 opr = "sub"
-flag = 0
+# flag = 0
 
 def bfs():
     global opr
-    global flag
+    # global flag
     current_node = fringe.get()
-    print("expanded size: " + str(expanded.qsize()))
+    # print("expanded size: " + str(expanded.qsize()))
 
     if expanded.qsize() == limit:
         print("No Solution Found")
         sys.exit(0)
-    current_node.print_current_node()
+    # current_node.print_current_node()
     # Check if goal node
     if current_node.get_current_node_content() == goal:
         solution.put(current_node)
         expanded.put(current_node)
         traverse_back(current_node)
-        print("Solution FOUND!!! ")
+        # print("Solution FOUND!!! ")
         return
     
     if opr == "sub" and current_node.get_digit_space() != 0:
@@ -78,10 +78,11 @@ def produce_child(current_node, current_opr,current_flag):
     if current_node.generate_next_node(current_opr,current_flag):
         current_node.generate_next_node(current_opr,current_flag) 
         current_node.set_parent_of_child(current_node)
-        current_node.print_next_node()
+        # current_node.print_next_node()
         child = current_node.get_next_node()
         if check_forbidden(child):
-            print("Forbidden "+ child.get_current_node_content())
+            # print("Forbidden "+ child.get_current_node_content())
+            return None
         else:
             fringe.put(child)
 
@@ -132,7 +133,7 @@ elif sys.argv[1] == 'A':
 elif sys.argv[1] == 'H':
     hill_climbing() 
 
-print("Printing out your solution: ")
+# print("Printing out your solution: ")
 def print_out(type_queue):
     printable_solution = ""
     count = 0
@@ -144,5 +145,5 @@ def print_out(type_queue):
             printable_solution += ","+ type_queue.get().get_current_node_content()
     print(printable_solution)
 print_out(solution)
+# print(expanded.qsize())
 print_out(expanded)
-

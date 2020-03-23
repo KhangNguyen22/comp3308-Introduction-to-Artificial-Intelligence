@@ -66,7 +66,7 @@ class Edgenode:
     def generate_next_node(self,operator,digit, weight=None):
             my_string = self.edit_number(self.content, operator,digit)
             if len(my_string) != 3:
-                print("error. get me out of here")
+                # print("error. get me out of here")
                 return None
             
             self.next_node = Edgenode(my_string, digit, weight)
