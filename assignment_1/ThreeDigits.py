@@ -13,6 +13,25 @@ solution = queue.LifoQueue()
 opr = "sub"
 # flag = 0
 
+def show_expanded():
+    expanded_string = ""
+    if len(expanded) == 1:
+        print(expanded[0].get_current_node_content())
+    else:
+        count = 0
+        for item in expanded:
+            if count == 0:
+                expanded_string += item.get_current_node_content()
+                count += 1
+            else:
+                expanded_string += "," + item.get_current_node_content()
+        print(expanded_string)
+
+def fail_output():
+    print("No solution found.")
+    show_expanded()
+    sys.exit(0)
+
 def bfs():
     global opr
     # global flag
@@ -23,8 +42,7 @@ def bfs():
         # print("expanded size: " + str(expanded.qsize()))
 
         if len(expanded) == limit:
-            print("No Solution Found")
-            sys.exit(0)
+            fail_output()
         # current_node.print_current_node()
         # Check if goal node
         if current_node.get_current_node_content() == goal:
@@ -67,8 +85,7 @@ def dfs(cur_node):
         return "elephant"
     
     if len(expanded) == limit:
-        print("No Solution Found")
-        sys.exit(0)
+        fail_output()
     
     if cur_node.get_current_node_content() == goal:
         solution.put(cur_node)
@@ -231,17 +248,6 @@ print_out(solution)
 
 # print(len(expanded))
 
-expanded_string = ""
-if len(expanded) == 1:
-    print(expanded[0].get_current_node_content())
-else:
-    count = 0
-    for item in expanded:
-        if count == 0:
-            expanded_string += item.get_current_node_content()
-            count += 1
-        else:
-            expanded_string += "," + item.get_current_node_content()
-    print(expanded_string)
 
 
+show_expanded()
