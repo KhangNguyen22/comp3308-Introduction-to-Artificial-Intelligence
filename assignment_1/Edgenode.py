@@ -24,6 +24,8 @@ class Edgenode:
             return "2"
         elif character == "2":
             return "3"
+        elif character == "3":
+            return "4"
         elif character == "4":
             return "5"
         elif character == "5":
@@ -78,9 +80,12 @@ class Edgenode:
     def set_parent_of_child(self, obj):
         self.next_node.parent_node = obj
 
+    def get_current_node_content(self):
+        return self.content
+
     def get_next_node(self):
         return self.next_node
-    def get_parent_of_child(self):
+    def get_parent_of_child_content(self):
         return self.next_node.parent_node.content
     
     
