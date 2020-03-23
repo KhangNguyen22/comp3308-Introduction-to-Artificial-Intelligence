@@ -154,7 +154,7 @@ def print_out(type_queue):
     print(printable_solution)
 print_out(solution)
 
-# print(len(expanded))
+print(len(expanded))
 
 expanded_string = ""
 if len(expanded) == 1:
