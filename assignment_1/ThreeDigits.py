@@ -35,34 +35,88 @@ def bfs():
             return
         
         if opr == "sub" and current_node.get_digit_space() != 0:
-            produce_child(current_node,opr,0)
+            produce_child(current_node,opr,0,True)
             opr = "add"
         
         if opr == "add" and current_node.get_digit_space() != 0:
-            produce_child(current_node,opr,0)
+            produce_child(current_node,opr,0,True)
             opr = "sub"
 
         if opr == "sub" and current_node.get_digit_space() != 1:
-            produce_child(current_node,opr,1)
+            produce_child(current_node,opr,1,True)
             opr = "add"
 
         if opr == "add" and current_node.get_digit_space() != 1:
-            produce_child(current_node,opr,1)
+            produce_child(current_node,opr,1,True)
             opr = "sub"
     
         if opr == "sub" and current_node.get_digit_space() != 2:
-            produce_child(current_node,opr,2)
+            produce_child(current_node,opr,2,True)
             opr = "add"
 
         if opr == "add" and current_node.get_digit_space() != 2:
-            produce_child(current_node,opr,2)
+            produce_child(current_node,opr,2,True)
             opr = "sub"
-        
         expanded.append(current_node)
 
 
-def dfs():
-    print("dfs working")
+def dfs(cur_node):
+    global opr
+    if cycle(cur_node):
+        return "elephant"
+    
+    if cur_node.get_current_node_content() == goal:
+        solution.put(cur_node)
+        expanded.append(cur_node)
+        traverse_back(cur_node)
+        # print("Solution FOUND!!! ")
+        return True
+    
+    expanded.append(cur_node)
+
+    if opr == "sub" and cur_node.get_digit_space() != 0:
+        child = produce_child(cur_node, opr,0, False)
+        dfs(child)
+        opr = "add"
+            
+    if solution.qsize() > 0:
+        return
+    
+    if opr == "add" and cur_node.get_digit_space() != 0:
+        child = produce_child(cur_node, opr,0, False)
+        dfs(child)
+        # opr = "sub"
+
+    if solution.qsize() > 0:
+        return
+
+    if opr == "sub" and cur_node.get_digit_space() != 1:
+        child = produce_child(cur_node, opr,1, False)
+        dfs(child)
+        # opr = "add"
+    
+    if solution.qsize() > 0:
+        return
+    
+    if opr == "add" and cur_node.get_digit_space() != 1:
+        child = produce_child(cur_node, opr,1, False)
+        # dfs(child)
+
+    if solution.qsize() > 0:
+        return 
+
+    if opr == "sub" and cur_node.get_digit_space() != 2:
+        child = produce_child(cur_node, opr,2, False)
+        # dfs(child
+    
+    if solution.qsize() > 0:
+        return
+    
+    if opr == "add" and cur_node.get_digit_space() != 2:
+        child = produce_child(cur_node, opr,2, False)
+
+    if solution.qsize() > 0:
+        return
 
 def ids():
     print("ids working")
@@ -82,7 +136,7 @@ def cycle(node):
             return True
     return False
 
-def produce_child(current_node, current_opr,current_flag):
+def produce_child(current_node, current_opr,current_flag, update_fringe):
     if current_node.generate_next_node(current_opr,current_flag):
         current_node.generate_next_node(current_opr,current_flag) 
         current_node.set_parent_of_child(current_node)
@@ -91,8 +145,11 @@ def produce_child(current_node, current_opr,current_flag):
         if check_forbidden(child):
             # print("Forbidden "+ child.get_current_node_content())
             return None
-        else:
+        
+        if update_fringe:
             fringe.put(child)
+        else:
+            return child
 
 def traverse_back(cur_node):
     while cur_node.get_parent():
@@ -131,7 +188,7 @@ elif len(clean) == 3:
 if sys.argv[1] == 'B':
     bfs()
 elif sys.argv[1] == 'D':
-    dfs()
+    dfs(fringe.get())
 elif sys.argv[1] == 'I':
     ids() 
 elif sys.argv[1] == 'G':
@@ -154,7 +211,7 @@ def print_out(type_queue):
     print(printable_solution)
 print_out(solution)
 
-print(len(expanded))
+# print(len(expanded))
 
 expanded_string = ""
 if len(expanded) == 1:
