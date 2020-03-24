@@ -80,6 +80,7 @@ def bfs():
 
 
 def dfs(cur_node, depth_limit= None):
+    global expanded
     cur_opr = "sub"
     if cycle(cur_node):
         # print("elephant")
@@ -88,6 +89,11 @@ def dfs(cur_node, depth_limit= None):
     
     if len(expanded) == limit:
         fail_output()
+    if len(expanded_ids) > limit:
+        print("No solution found.")
+        expanded = expanded_ids[:1000]
+        show_expanded()
+        sys.exit(0)
     
     if cur_node.get_current_node_content() == goal:
         solution.put(cur_node)
@@ -99,14 +105,14 @@ def dfs(cur_node, depth_limit= None):
     expanded.append(cur_node)
 
     if depth_limit == 0:
-        return "hit limit"
+        return None
 
     if cur_opr == "sub" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, cur_opr,0, False)
         if child and depth_limit is None :
             dfs(child)
-        # if child and depth_limit is not None:
-        #     dfs(child, depth_limit=)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
             
         cur_opr = "add"
             
@@ -117,6 +123,8 @@ def dfs(cur_node, depth_limit= None):
         child = produce_child(cur_node, cur_opr,0, False)
         if child and depth_limit is None :
             dfs(child)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
         cur_opr = "sub"
 
     if solution.qsize() > 0:
@@ -128,6 +136,8 @@ def dfs(cur_node, depth_limit= None):
         # print(child)
         if child and depth_limit is None :
             dfs(child)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
         cur_opr = "add"
     
     if solution.qsize() > 0:
@@ -138,6 +148,8 @@ def dfs(cur_node, depth_limit= None):
         # print(child.get_current_node_content())
         if child and depth_limit is None :
             dfs(child)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
         cur_opr = "sub"
 
     if solution.qsize() > 0:
@@ -147,6 +159,8 @@ def dfs(cur_node, depth_limit= None):
         child = produce_child(cur_node, cur_opr,2, False)
         if child and depth_limit is None :
             dfs(child)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
         cur_opr = "add"
     
     if solution.qsize() > 0:
@@ -156,6 +170,8 @@ def dfs(cur_node, depth_limit= None):
         child = produce_child(cur_node, cur_opr,2, False)
         if child and depth_limit is None :
             dfs(child)
+        if child and depth_limit is not None:
+            dfs(child, depth_limit-1)
 
     if solution.qsize() > 0:
         return True
@@ -164,6 +180,9 @@ def ids(cur_node):
     global expanded
     depth_limit = 0
     while True:
+        # print(len(expanded_ids))
+        # if len(expanded_ids) > limit:
+        #     fail_output()
         result = dfs(cur_node, depth_limit)
         # print(result)
         if result:
