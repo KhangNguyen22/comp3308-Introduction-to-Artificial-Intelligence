@@ -84,7 +84,7 @@ def dfs(cur_node, depth_limit= None):
     cur_opr = "sub"
     if cycle(cur_node):
         # print("elephant")
-        return "elephant"
+        return "found_cycle"
         # return None
     
     if len(expanded) == limit:
@@ -180,9 +180,6 @@ def ids(cur_node):
     global expanded
     depth_limit = 0
     while True:
-        # print(len(expanded_ids))
-        # if len(expanded_ids) > limit:
-        #     fail_output()
         result = dfs(cur_node, depth_limit)
         # print(result)
         if result:

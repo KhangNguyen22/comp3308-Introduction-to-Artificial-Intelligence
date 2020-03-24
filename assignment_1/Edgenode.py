@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 class Edgenode:
-    def __init__(self,current_number, flag= None, wg=None,mother=None):
+    def __init__(self,current_number, flag= None, h=None,mother=None):
         self.parent_node = mother
         self.content = current_number
         self.digit_space = flag
-        self.edge_weight = wg
+        self.heuristic = h
         self.next_node = None
 
     def edit_number(self,num, opr, index):
@@ -63,13 +63,13 @@ class Edgenode:
             return "ERROR" 
 
 
-    def generate_next_node(self,operator,digit, weight=None):
+    def generate_next_node(self,operator,digit, heuristic=None):
             my_string = self.edit_number(self.content, operator,digit)
             if len(my_string) != 3:
                 # print("error. get me out of here")
                 return None
             
-            self.next_node = Edgenode(my_string, digit, weight)
+            self.next_node = Edgenode(my_string, digit, heuristic)
             return True
         # pass
 
