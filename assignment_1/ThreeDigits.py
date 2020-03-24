@@ -79,11 +79,12 @@ def bfs():
         expanded.append(current_node)
 
 
-def dfs(cur_node,depth_limit = None):
+def dfs(cur_node, depth_limit= None):
     cur_opr = "sub"
     if cycle(cur_node):
         # print("elephant")
         return "elephant"
+        # return None
     
     if len(expanded) == limit:
         fail_output()
@@ -97,64 +98,86 @@ def dfs(cur_node,depth_limit = None):
     
     expanded.append(cur_node)
 
+    if depth_limit == 0:
+        return "hit limit"
+
     if cur_opr == "sub" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, cur_opr,0, False)
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
+        # if child and depth_limit is not None:
+        #     dfs(child, depth_limit=)
+            
         cur_opr = "add"
             
     if solution.qsize() > 0:
-        return
+        return True
     
     if cur_opr == "add" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, cur_opr,0, False)
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
         cur_opr = "sub"
 
     if solution.qsize() > 0:
-        return
+        return True
 
     if cur_opr == "sub" and cur_node.get_digit_space() != 1:
         child = produce_child(cur_node, cur_opr,1, False)
         # print("1")
         # print(child)
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
         cur_opr = "add"
     
     if solution.qsize() > 0:
-        return
+        return True
     
     if cur_opr == "add" and cur_node.get_digit_space() != 1:
         child = produce_child(cur_node, cur_opr,1, False)
         # print(child.get_current_node_content())
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
         cur_opr = "sub"
 
     if solution.qsize() > 0:
-        return 
+        return True
 
     if cur_opr == "sub" and cur_node.get_digit_space() != 2:
         child = produce_child(cur_node, cur_opr,2, False)
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
         cur_opr = "add"
     
     if solution.qsize() > 0:
-        return
+        return True
     
     if cur_opr == "add" and cur_node.get_digit_space() != 2:
         child = produce_child(cur_node, cur_opr,2, False)
-        if child and not depth_limit:
+        if child and depth_limit is None :
             dfs(child)
 
     if solution.qsize() > 0:
-        return
+        return True
 
-def ids():
-    print("ids working")
+def ids(cur_node):
+    global expanded
+    depth_limit = 0
+    while True:
+        result = dfs(cur_node, depth_limit)
+        # print(result)
+        if result:
+            add_to_expanded_ids()
+            break
+        add_to_expanded_ids()
+        expanded = []
+        depth_limit += 1
+    
+    expanded = expanded_ids
+
+def add_to_expanded_ids():
+    for item in expanded:
+        expanded_ids.append(item)
 
 def greedy():
     print("greedy work")
@@ -226,7 +249,7 @@ if sys.argv[1] == 'B':
 elif sys.argv[1] == 'D':
     dfs(fringe.get())
 elif sys.argv[1] == 'I':
-    ids() 
+    ids(fringe.get()) 
 elif sys.argv[1] == 'G':
     greedy() 
 elif sys.argv[1] == 'A':
