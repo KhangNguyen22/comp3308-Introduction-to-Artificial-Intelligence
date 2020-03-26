@@ -42,7 +42,7 @@ def bfs():
             continue
         # print("expanded size: " + str(expanded.qsize()))
 
-        if len(expanded) == limit:
+        if len(expanded) == limit or len(current_node.get_current_node_content()) != 3 or len(goal) !=3:
             fail_output()
         # current_node.print_current_node()
         # Check if goal node
@@ -87,7 +87,7 @@ def dfs(cur_node, depth_limit= None):
         return "found_cycle"
         # return None
 
-    if len(expanded) == limit:
+    if len(expanded) == limit or len(cur_node.get_current_node_content()) != 3 or len(goal) !=3:
         fail_output()
     if len(expanded_ids) > limit:
         print("No solution found.")
@@ -201,7 +201,7 @@ def greedy(heuristic_node=None, first_time=False):
     if cycle(heuristic_node[1]):
         return "found_cycle"
 
-    if len(expanded) == limit:
+    if len(expanded) == limit or len(heuristic_node[1].get_current_node_content()) != 3 or len(goal) !=3:
         fail_output()
 
     if heuristic_node[1].get_current_node_content() == goal:
