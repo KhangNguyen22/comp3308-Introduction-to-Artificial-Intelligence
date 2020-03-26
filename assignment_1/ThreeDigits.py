@@ -5,6 +5,7 @@ import queue
 limit = 1000
 
 fringe = queue.Queue()
+priority_fringe = []
 goal = None
 # priority_fringe = 
 forbidden = None
@@ -52,11 +53,11 @@ def bfs():
             traverse_back(current_node)
             # print("Solution FOUND!!! ")
             return
-        
+
         if opr == "sub" and current_node.get_digit_space() != 0:
             produce_child(current_node,opr,0,True)
             opr = "add"
-        
+
         if opr == "add" and current_node.get_digit_space() != 0:
             produce_child(current_node,opr,0,True)
             opr = "sub"
@@ -68,7 +69,7 @@ def bfs():
         if opr == "add" and current_node.get_digit_space() != 1:
             produce_child(current_node,opr,1,True)
             opr = "sub"
-    
+
         if opr == "sub" and current_node.get_digit_space() != 2:
             produce_child(current_node,opr,2,True)
             opr = "add"
@@ -86,7 +87,7 @@ def dfs(cur_node, depth_limit= None):
         # print("elephant")
         return "found_cycle"
         # return None
-    
+
     if len(expanded) == limit:
         fail_output()
     if len(expanded_ids) > limit:
@@ -94,14 +95,14 @@ def dfs(cur_node, depth_limit= None):
         expanded = expanded_ids[:1000]
         show_expanded()
         sys.exit(0)
-    
+
     if cur_node.get_current_node_content() == goal:
         solution.put(cur_node)
         expanded.append(cur_node)
         traverse_back(cur_node)
         # print("Solution FOUND!!! ")
         return True
-    
+
     expanded.append(cur_node)
 
     if depth_limit == 0:
@@ -113,12 +114,12 @@ def dfs(cur_node, depth_limit= None):
             dfs(child)
         if child and depth_limit is not None:
             dfs(child, depth_limit-1)
-            
+
         cur_opr = "add"
-            
+
     if solution.qsize() > 0:
         return True
-    
+
     if cur_opr == "add" and cur_node.get_digit_space() != 0:
         child = produce_child(cur_node, cur_opr,0, False)
         if child and depth_limit is None :
@@ -139,10 +140,10 @@ def dfs(cur_node, depth_limit= None):
         if child and depth_limit is not None:
             dfs(child, depth_limit-1)
         cur_opr = "add"
-    
+
     if solution.qsize() > 0:
         return True
-    
+
     if cur_opr == "add" and cur_node.get_digit_space() != 1:
         child = produce_child(cur_node, cur_opr,1, False)
         # print(child.get_current_node_content())
@@ -162,10 +163,10 @@ def dfs(cur_node, depth_limit= None):
         if child and depth_limit is not None:
             dfs(child, depth_limit-1)
         cur_opr = "add"
-    
+
     if solution.qsize() > 0:
         return True
-    
+
     if cur_opr == "add" and cur_node.get_digit_space() != 2:
         child = produce_child(cur_node, cur_opr,2, False)
         if child and depth_limit is None :
@@ -188,21 +189,93 @@ def ids(cur_node):
         add_to_expanded_ids()
         expanded = []
         depth_limit += 1
-    
+
     expanded = expanded_ids
 
 def add_to_expanded_ids():
     for item in expanded:
         expanded_ids.append(item)
 
-def greedy():
-    print("greedy work")
+def greedy(heuristic_node=None, first_time=False):
+    opr = "sub"
+    if not first_time:
+        heuristic_node = priority_fringe.pop(0)
+
+    if cycle(heuristic_node[1]):
+        return "found_cycle"
+
+    if len(expanded) == limit:
+        fail_output()
+
+    if heuristic_node[1].get_current_node_content() == goal:
+        solution.put(heuristic_node[1])
+        expanded.append(heuristic_node[1])
+        traverse_back(heuristic_node[1])
+        return True
+    # print(str(heuristic_node[0])+" , "+ heuristic_node[1].get_current_node_content())
+
+    if opr == "sub" and heuristic_node[1].get_digit_space() != 0:
+        local_child = produce_child(heuristic_node[1],opr,0,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and heuristic_node[1].get_digit_space() != 0:
+        local_child = produce_child(heuristic_node[1],opr,0,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "sub"
+
+    if opr == "sub" and heuristic_node[1].get_digit_space() != 1:
+        local_child = produce_child(heuristic_node[1],opr,1,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and heuristic_node[1].get_digit_space() != 1:
+        local_child = produce_child(heuristic_node[1],opr,1,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "sub"
+
+    if opr == "sub" and heuristic_node[1].get_digit_space() != 2:
+        local_child = produce_child(heuristic_node[1],opr,2,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and heuristic_node[1].get_digit_space() != 2:
+        local_child = produce_child(heuristic_node[1],opr,2,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "sub"
+
+    expanded.append(heuristic_node[1])
+
+    greedy()
 
 def a_star():
     print("a_star work")
 
 def hill_climbing():
     print("Hill climbing works")
+
+def insert_priority_fringe(list_object):
+    if len(priority_fringe) == 0:
+        priority_fringe.append(list_object)
+    else:
+        for i in range(len(priority_fringe)):
+            if priority_fringe[i][0] == list_object[0] or list_object[0] < priority_fringe[i][0]:
+                priority_fringe.insert(i,list_object)
+                break
+        priority_fringe.append(list_object)
+        #Find the place to insert into priority fringe so we get an ordered fringed
 
 def cycle(node):
     # print(node.get_current_node_content)
@@ -211,16 +284,19 @@ def cycle(node):
             return True
     return False
 
+def manhatten_heuristic(cur_node):
+    cur_node = cur_node.get_current_node_content()
+    return abs(int(cur_node[0]) - int(goal[0])  ) + abs(int(cur_node[1]) -int(goal[1])) + abs(int(cur_node[2]) -int(goal[2]))
+
 def produce_child(current_node, current_opr,current_flag, update_fringe):
     if current_node.generate_next_node(current_opr,current_flag):
         current_node.generate_next_node(current_opr,current_flag) 
         current_node.set_parent_of_child(current_node)
-        # current_node.print_next_node()
         child = current_node.get_next_node()
         if check_forbidden(child):
             # print("Forbidden "+ child.get_current_node_content())
             return None
-        
+
         if update_fringe:
             fringe.put(child)
         else:
@@ -265,13 +341,16 @@ if sys.argv[1] == 'B':
 elif sys.argv[1] == 'D':
     dfs(fringe.get())
 elif sys.argv[1] == 'I':
-    ids(fringe.get()) 
+    ids(fringe.get())
 elif sys.argv[1] == 'G':
-    greedy() 
+    g_node = fringe.get()
+    temp_list = [None, g_node]
+    greedy(temp_list, True)
+
 elif sys.argv[1] == 'A':
     a_star()
 elif sys.argv[1] == 'H':
-    hill_climbing() 
+    hill_climbing()
 
 # print("Printing out your solution: ")
 def print_out(type_queue):
@@ -287,7 +366,5 @@ def print_out(type_queue):
 print_out(solution)
 
 # print(len(expanded))
-
-
 
 show_expanded()
