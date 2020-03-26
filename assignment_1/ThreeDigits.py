@@ -13,7 +13,6 @@ expanded = []
 expanded_ids = []
 solution = queue.LifoQueue()
 opr = "sub"
-# flag = 0
 
 def show_expanded():
     expanded_string = ""
@@ -198,8 +197,6 @@ def add_to_expanded_ids():
 
 def greedy(heuristic_node=None, first_time=False):
     opr = "sub"
-    if not first_time:
-        heuristic_node = priority_fringe.pop(0)
 
     if cycle(heuristic_node[1]):
         return "found_cycle"
@@ -212,7 +209,6 @@ def greedy(heuristic_node=None, first_time=False):
         expanded.append(heuristic_node[1])
         traverse_back(heuristic_node[1])
         return True
-    # print(str(heuristic_node[0])+" , "+ heuristic_node[1].get_current_node_content())
 
     if opr == "sub" and heuristic_node[1].get_digit_space() != 0:
         local_child = produce_child(heuristic_node[1],opr,0,False)
@@ -254,11 +250,10 @@ def greedy(heuristic_node=None, first_time=False):
         if local_child:
             local_heuristic_value = manhatten_heuristic(local_child)
             insert_priority_fringe([local_heuristic_value,local_child])
-        opr = "sub"
 
     expanded.append(heuristic_node[1])
-
-    greedy()
+    if len(priority_fringe) != 0:
+        greedy(priority_fringe.pop(0))
 
 def a_star():
     print("a_star work")
@@ -273,7 +268,7 @@ def insert_priority_fringe(list_object):
         for i in range(len(priority_fringe)):
             if priority_fringe[i][0] == list_object[0] or list_object[0] < priority_fringe[i][0]:
                 priority_fringe.insert(i,list_object)
-                break
+                return True
         priority_fringe.append(list_object)
         #Find the place to insert into priority fringe so we get an ordered fringed
 
@@ -345,7 +340,12 @@ elif sys.argv[1] == 'I':
 elif sys.argv[1] == 'G':
     g_node = fringe.get()
     temp_list = [None, g_node]
-    greedy(temp_list, True)
+    # priority_fringe.append([None,'khang'])
+    # insert_priority_fringe([0,'minh'])
+    # insert_priority_fringe([None,'truc'])
+    # priority_fringe.pop(0)
+    # print(priority_fringe)
+    greedy(temp_list)
 
 elif sys.argv[1] == 'A':
     a_star()
@@ -364,7 +364,5 @@ def print_out(type_queue):
             printable_solution += ","+ type_queue.get().get_current_node_content()
     print(printable_solution)
 print_out(solution)
-
 # print(len(expanded))
-
 show_expanded()
