@@ -13,6 +13,7 @@ forbidden = None
 expanded = []
 expanded_ids = []
 solution = queue.LifoQueue()
+current_hill_node = None
 opr = "sub"
 
 def show_expanded():
@@ -282,7 +283,76 @@ def greedy(heuristic_node=None, is_a_star = False):
 
 
 def hill_climbing():
-    print("Hill climbing works")
+    global current_hill_node
+    global priority_fringe
+    opr = "sub"
+
+    if cycle(current_hill_node[1]):
+        return "found_cycle"
+
+    if len(expanded) == limit or len(current_hill_node[1].get_current_node_content()) != 3 or len(goal) !=3:
+        fail_output()
+
+    if current_hill_node[1].get_current_node_content() == goal:
+        solution.put(current_hill_node[1])
+        expanded.append(current_hill_node[1])
+        traverse_back(current_hill_node[1])
+        return True
+
+    if opr == "sub" and current_hill_node[1].get_digit_space() != 0:
+        local_child = produce_child(current_hill_node[1],opr,0,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([ local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and current_hill_node[1].get_digit_space() != 0:
+        local_child = produce_child(current_hill_node[1],opr,0,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([ local_heuristic_value,local_child])
+        opr = "sub"
+
+    if opr == "sub" and current_hill_node[1].get_digit_space() != 1:
+        local_child = produce_child(current_hill_node[1],opr,1,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and current_hill_node[1].get_digit_space() != 1:
+        local_child = produce_child(current_hill_node[1],opr,1,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+            
+        opr = "sub"
+
+    if opr == "sub" and current_hill_node[1].get_digit_space() != 2:
+        local_child = produce_child(current_hill_node[1],opr,2,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+        opr = "add"
+
+    if opr == "add" and current_hill_node[1].get_digit_space() != 2:
+        local_child = produce_child(current_hill_node[1],opr,2,False)
+        if local_child:
+            local_heuristic_value = manhatten_heuristic(local_child)
+            insert_priority_fringe([local_heuristic_value,local_child])
+
+    expanded.append(current_hill_node[1])
+    if len(priority_fringe) != 0:
+        child = priority_fringe.pop(0)
+        # Maybe less than. Also, generate manhatten heursitic for your root node
+        if child[0] > current_hill_node[0]:
+            return current_hill_node
+        else:
+            current_hill_node = child
+            priority_fringe = []
+            hill_climbing()
+
+    # print("Hill climbing works")
 
 def insert_priority_fringe(list_object):
     if len(priority_fringe) == 0:
@@ -377,6 +447,9 @@ elif sys.argv[1] == 'G' or sys.argv[1] == 'A' :
         greedy(temp_list, True)
 
 elif sys.argv[1] == 'H':
+    h_node = fringe.get()
+    temp_num = manhatten_heuristic(h_node)
+    current_hill_node = [temp_num, h_node]
     hill_climbing()
 
 # print("Printing out your solution: ")
@@ -389,7 +462,10 @@ def print_out(type_queue):
             count += 1
         else:
             printable_solution += ","+ type_queue.get().get_current_node_content()
-    print(printable_solution)
+    if printable_solution == "":
+        print("No solution found.")
+    else:
+        print(printable_solution)
 print_out(solution)
 # print(len(expanded))
 show_expanded()
