@@ -219,8 +219,6 @@ def greedy(heuristic_node=None, is_a_star = False):
             if is_a_star:
                 num_edges = path_cost(local_child)
             insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-            
-            
         opr = "add"
 
     if opr == "add" and heuristic_node[1].get_digit_space() != 0:
@@ -264,7 +262,6 @@ def greedy(heuristic_node=None, is_a_star = False):
             if is_a_star:
                 num_edges = path_cost(local_child)
             insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-           
         opr = "add"
 
     if opr == "add" and heuristic_node[1].get_digit_space() != 2:
@@ -283,79 +280,6 @@ def greedy(heuristic_node=None, is_a_star = False):
         else:
             greedy(priority_fringe.pop(0))
 
-def a_star(heuristic_node=None):
-    opr = "sub"
-
-    if cycle(heuristic_node[1]):
-        return "found_cycle"
-
-    if len(expanded) == limit or len(heuristic_node[1].get_current_node_content()) != 3 or len(goal) !=3:
-        fail_output()
-
-    if heuristic_node[1].get_current_node_content() == goal:
-        solution.put(heuristic_node[1])
-        expanded.append(heuristic_node[1])
-        traverse_back(heuristic_node[1])
-        return True
-
-    if opr == "sub" and heuristic_node[1].get_digit_space() != 0:
-        local_child = produce_child(heuristic_node[1],opr,0,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-            
-            
-        opr = "add"
-
-    if opr == "add" and heuristic_node[1].get_digit_space() != 0:
-        local_child = produce_child(heuristic_node[1],opr,0,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-            
-        opr = "sub"
-
-    if opr == "sub" and heuristic_node[1].get_digit_space() != 1:
-        local_child = produce_child(heuristic_node[1],opr,1,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-            
-        opr = "add"
-
-    if opr == "add" and heuristic_node[1].get_digit_space() != 1:
-        local_child = produce_child(heuristic_node[1],opr,1,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-            
-        opr = "sub"
-
-    if opr == "sub" and heuristic_node[1].get_digit_space() != 2:
-        local_child = produce_child(heuristic_node[1],opr,2,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-           
-        opr = "add"
-
-    if opr == "add" and heuristic_node[1].get_digit_space() != 2:
-        local_child = produce_child(heuristic_node[1],opr,2,False)
-        if local_child:
-            local_heuristic_value = manhatten_heuristic(local_child)
-            num_edges = path_cost(local_child)
-            insert_priority_fringe([ num_edges + local_heuristic_value,local_child])
-
-    expanded.append(heuristic_node[1])
-    if len(priority_fringe) != 0:
-        a_star(priority_fringe.pop(0))
-
-    # print("a_star work")
 
 def hill_climbing():
     print("Hill climbing works")
@@ -443,21 +367,14 @@ elif sys.argv[1] == 'D':
     dfs(fringe.get())
 elif sys.argv[1] == 'I':
     ids(fringe.get())
-elif sys.argv[1] == 'G':
+elif sys.argv[1] == 'G' or sys.argv[1] == 'A' :
     g_node = fringe.get()
+    root_int = int(g_node.get_current_node_content())
     temp_list = [None, g_node]
-    # priority_fringe.append([None,'khang'])
-    # insert_priority_fringe([0,'minh'])
-    # insert_priority_fringe([None,'truc'])
-    # priority_fringe.pop(0)
-    # print(priority_fringe)
-    greedy(temp_list)
-
-elif sys.argv[1] == 'A':
-    a_node = fringe.get()
-    root_int = int(a_node.get_current_node_content())
-    temp_list = [None, a_node]
-    greedy(temp_list,True)
+    if sys.argv[1] == 'G':
+        greedy(temp_list)
+    elif sys.argv[1] == 'A':
+        greedy(temp_list, True)
 
 elif sys.argv[1] == 'H':
     hill_climbing()
@@ -476,4 +393,3 @@ def print_out(type_queue):
 print_out(solution)
 # print(len(expanded))
 show_expanded()
-# print(root_int)
